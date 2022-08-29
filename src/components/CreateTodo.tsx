@@ -1,35 +1,26 @@
-import { useForm } from "react-hook-form";
-import {
-  atom,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
-import Todo from "./Todo";
-import {
-  ITodoList,
-  todoState,
-  categories,
-  TodoSelector,
-  CategoryState,
-} from "../atom";
 import React from "react";
-
-interface ICreateTodo {
+import { useForm } from "react-hook-form";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Categories, CategoryState, TodoState, TodoSelector } from "../atom";
+import Todo from "./Todo";
+interface ITodo {
   todo: string;
 }
 
 const CreateTodo = () => {
-  const { handleSubmit, register, watch, setValue } = useForm<ICreateTodo>();
-  const setTodos = useSetRecoilState<ITodoList[]>(todoState);
-  const [category, setCategory] = useRecoilState(CategoryState);
-  const changeTodo = useRecoilValue(TodoSelector);
-  const onSubmit = ({ todo }: ICreateTodo) => {
-    setTodos((prev) => [{ text: todo, id: Date.now(), category }, ...prev]);
+  const { register, setValue, handleSubmit } = useForm<ITodo>();
+  const [todos, setTodos] = useRecoilState(TodoState);
+  const newTodo = useRecoilValue(TodoSelector);
+  const [newCat, setNewCat] = useRecoilState(CategoryState);
+  const onSubmit = ({ todo }: ITodo) => {
+    setTodos((prev) => [
+      { text: todo, id: Date.now(), category: Categories.todo },
+      ...prev,
+    ]);
     setValue("todo", "");
   };
   const onInput = (event: React.MouseEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as any);
+    setNewCat(event.currentTarget.value as any);
   };
   return (
     <div>
@@ -41,14 +32,14 @@ const CreateTodo = () => {
         <button>Add</button>
       </form>
       <form>
-        <select onInput={onInput}>
-          <option value={categories.todo}>todo</option>
-          <option value={categories.doing}>doing</option>
-          <option value={categories.done}>done</option>
+        <select value={newCat} onInput={onInput}>
+          <option value={Categories.todo}>Todo</option>
+          <option value={Categories.doing}>Doing</option>
+          <option value={Categories.done}>Done</option>
         </select>
       </form>
       <ul>
-        {changeTodo.map((todo) => (
+        {newTodo.map((todo) => (
           <Todo key={todo.id} {...todo} />
         ))}
       </ul>

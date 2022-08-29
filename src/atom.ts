@@ -1,31 +1,30 @@
 import { atom, selector } from "recoil";
 
-export enum categories {
+export enum Categories {
   "todo" = "todo",
   "doing" = "doing",
   "done" = "done",
 }
 
-export const CategoryState = atom<categories>({
+export const CategoryState = atom<Categories>({
   key: "category",
-  default: categories.todo,
+  default: Categories.todo,
 });
-
-export interface ITodoList {
+export interface ITodoState {
   text: string;
   id: number;
-  category: "todo" | "doing" | "done";
+  category: Categories;
 }
 
-export const todoState = atom<ITodoList[]>({
-  key: "todo",
+export const TodoState = atom<ITodoState[]>({
+  key: "todos",
   default: [],
 });
 
 export const TodoSelector = selector({
   key: "selector",
   get: ({ get }) => {
-    const todos = get(todoState);
+    const todos = get(TodoState);
     const category = get(CategoryState);
     return todos.filter((todo) => todo.category === category);
   },

@@ -1,11 +1,13 @@
-import { useSetRecoilState } from "recoil";
-import { ITodoList, todoState, categories } from "../atom";
+import React from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { ITodoState, Categories, TodoState } from "../atom";
 
-const Todo = ({ text, id, category }: ITodoList) => {
-  const todos = useSetRecoilState(todoState);
-  const onClick = (data: ITodoList["category"]) => {
-    todos((oldTodos) => {
-      const targetIndex = oldTodos.findIndex((todo) => todo.id === id);
+const Todo = ({ text, id, category }: ITodoState) => {
+  const setTodos = useSetRecoilState(TodoState);
+  const onClick = (data: ITodoState["category"]) => {
+    setTodos((oldTodos) => {
+      console.log(oldTodos);
+      const targetIndex = oldTodos.findIndex((oldTodo) => oldTodo.id === id);
       const newTodo = { text, id, category: data };
       return [
         ...oldTodos.slice(0, targetIndex),
@@ -14,19 +16,26 @@ const Todo = ({ text, id, category }: ITodoList) => {
       ];
     });
   };
+  const deleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setTodos((oldTodos) => {
+      const target = oldTodos.findIndex((oldTodo) => oldTodo.id === id);
+      return [...oldTodos.slice(0, target), ...oldTodos.slice(target + 1)];
+    });
+  };
   return (
-    <li>
-      {text}
-      {category !== "todo" && (
-        <button onClick={() => onClick("todo")}>todo</button>
+    <>
+      <li>{text}</li>
+      {category !== Categories.todo && (
+        <button onClick={() => onClick(Categories.todo)}>Todo</button>
       )}
-      {category !== "doing" && (
-        <button onClick={() => onClick("doing")}>doing</button>
+      {category !== Categories.doing && (
+        <button onClick={() => onClick(Categories.doing)}>Doing</button>
       )}
-      {category !== "done" && (
-        <button onClick={() => onClick("done")}>done</button>
+      {category !== Categories.done && (
+        <button onClick={() => onClick(Categories.done)}>Done</button>
       )}
-    </li>
+      <button onClick={deleteClick}>❌</button>
+    </>
   );
 };
 
