@@ -11,7 +11,7 @@ import Board from "./Components/Board";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Form from "./Components/Form";
-
+import { atom } from "recoil";
 const Wrapper = styled.div`
   display: flex;
   width: 100vw;
@@ -42,10 +42,32 @@ const FormDiv = styled.div`
   display: flex;
   margin: 0 auto;
 `;
-
+const headerDiv = styled.div`
+  display: flex;
+  justify-content: sp;
+`;
+const timeState = atom({
+  key: "time",
+  default: new Date(),
+});
+const Mmmdiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 650px;
+  margin: 10px auto;
+`;
+const TitleDiv = styled.div`
+  margin: 0px 20px;
+  font-size: 40px;
+`;
 const App = () => {
   const [todoBoards, setTodoBoards] = useRecoilState(todoState);
+  const [time, setTime] = useRecoilState(timeState);
   const [hidden, setHidden] = useRecoilState(hiddenState);
+  setInterval(() => {
+    setTime(new Date());
+  }, 1000);
   const onDragEnd = (info: DropResult) => {
     const { destination, source, draggableId } = info;
     if (destination?.droppableId === "trash") {
@@ -93,16 +115,30 @@ const App = () => {
   const onClick = () => {
     setHidden((prev) => !prev);
   };
+  const getClock = () => {
+    const date = new Date();
+    const clock = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  };
   return (
     <Wrapper>
-      <FormDiv>
-        <div hidden={!hidden}>
-          <FontAwesomeIcon onClick={onClick} icon={faPlus} />
+      <Mmmdiv>
+        <div>
+          <span>{time.toLocaleDateString()}</span>
+          <span>{time.toLocaleTimeString()}</span>
         </div>
-        <div hidden={hidden}>
-          <Form />
-        </div>
-      </FormDiv>
+        <TitleDiv>
+          <h1>To Do List</h1>
+        </TitleDiv>
+        <FormDiv>
+          <div hidden={!hidden}>
+            <FontAwesomeIcon onClick={onClick} icon={faPlus} />
+          </div>
+          <div hidden={hidden}>
+            <Form />
+          </div>
+        </FormDiv>
+      </Mmmdiv>
+
       <DragDropContext onDragEnd={onDragEnd}>
         <div>
           <Boards>
