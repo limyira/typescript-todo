@@ -3,6 +3,7 @@ import App from "./App";
 import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -76,7 +77,11 @@ root.render(
   <RecoilRoot>
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
-      <App />
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <Routes>
+          <Route path={process.env.PUBLIC_URL} element={<App />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   </RecoilRoot>
 );
