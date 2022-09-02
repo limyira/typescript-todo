@@ -31,7 +31,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "postbuild": "cp build/index.html build/404.html",
     "predeploy": "npm run build"
   },
   "eslintConfig": {
@@ -56,5 +55,5 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/styled-components": "^5.1.26"
   },
-  "homepages": "https://limyira.github.io/typescript-todo"
+  "homepage": "https://limyira.github.io/typescript-todo"
 }

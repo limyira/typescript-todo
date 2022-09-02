@@ -79,7 +79,7 @@ root.render(
       <GlobalStyle />
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
-          <Route path={process.env.PUBLIC_URL} element={<App />} />
+          <Route path="/" element={<App />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
